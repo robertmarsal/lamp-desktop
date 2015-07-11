@@ -1,9 +1,18 @@
 var osenv = require('osenv');
 var fs    = require('fs');
 
-global.library = osenv.home() + '/.lamp/books';
+global.library = osenv.home() + '/.lamp';
 
-// Make sure the library folder exists
-if (!fs.existsSync(library)) {
-    fs.mkdirSync(library);
-}
+var libraryFolders = [
+    // All the user books are stored here
+    'books',
+    // Cache of the book covers
+    'cache'
+];
+
+// Make sure all the library folders exist
+libraryFolders.forEach(function(folder){
+    if (!fs.existsSync(global.library + '/' + folder)) {
+        fs.mkdirSync(global.library + '/' + folder);
+    }
+});

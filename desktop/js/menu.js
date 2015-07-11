@@ -17,13 +17,13 @@ var libraryFilters = [
 function addBookToLibrary() {
 
     var bookImporter = function (filePath) {
-        if (filePath === undefined) {
+        if (!filePath) {
             return;
         };
         var fileName = path.basename(filePath);
 
         var readStream  = fs.createReadStream(filePath[0]);
-        var writeStream = fs.createWriteStream(global.library + '/' + fileName);
+        var writeStream = fs.createWriteStream(global.library + '/books/' + fileName);
 
         readStream.pipe(writeStream);
 
@@ -37,6 +37,10 @@ function addBookToLibrary() {
     );
 }
 
+function displayInfo () {
+
+}
+
 menu = Menu.buildFromTemplate([
     {
         label: 'Library',
@@ -45,6 +49,15 @@ menu = Menu.buildFromTemplate([
                 label: 'Add eBook',
                 accelerator: 'Ctrl+O',
                 click: addBookToLibrary
+            }
+        ],
+    },
+    {
+        label: 'About',
+        submenu: [
+            {
+                label: 'Info',
+                click: displayInfo
             }
         ],
     },
