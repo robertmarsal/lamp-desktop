@@ -48,14 +48,22 @@ function getBookCoverSrc(bookMetadata, callback) {
 function buildDomBook(coverSrc) {
 
     var eBookContainer = document.createElement('div');
+    var eBookLink      = document.createElement('a');
+    var eBookOverlay   = document.createElement('div');
     var eBookCover     = document.createElement('img');
 
     eBookContainer.setAttribute('class', 'lamp-book');
+
+    eBookOverlay.setAttribute('class', 'lamp-book-overlay');
+    eBookOverlay.innerHTML = '<span><strong>Test</strong></span>'
+
     eBookCover.setAttribute('class', 'lamp-book-cover');
     eBookCover.setAttribute('src', coverSrc);
 
+    eBookLink.appendChild(eBookOverlay);
+    eBookLink.appendChild(eBookCover);
 
-    eBookContainer.appendChild(eBookCover);
+    eBookContainer.appendChild(eBookLink);
     libraryContainer.appendChild(eBookContainer);
 }
 
