@@ -1,7 +1,7 @@
 {
     "name": "lamp",
     "version" : "0.0.0",
-    "main": "main.js",
+    "main": "js/main.js",
     "devDependencies": {
         "electron-prebuilt": "^0.29.2"
     }
