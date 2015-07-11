@@ -1,0 +1,29 @@
+html {
+    background-color: #2b2a27;
+    color: #ede0ce;
+    overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    background: #56544E;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #403F3A;
+}
+
+#lamp-container {
+    padding-left: 30px;
+}
+
+.lamp-book {
+    display: inline-block;
+    padding-right: 30px;
+}
+
+.lamp-book-cover {
+    height: 250px;
+    width: 155px;
+    padding-top: 30px;
+}
