@@ -62,11 +62,16 @@ body::before {
 .lamp-book-overlay span {
     margin: auto;
     position: absolute;
-    font-size: 29px;
+    font-size: 24px;
     top: 30px;
     left: 0;
     bottom: 0;
-    right: 0
+    right: 8px;
+}
+
+.lamp-book-title,
+.lamp-book-author {
+    display: block;
 }
 
 .lamp-book-cover {

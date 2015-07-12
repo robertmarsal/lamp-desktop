@@ -12,7 +12,7 @@ function getBookCoverSrc(epub, sum, callback) {
 
     // Check if the cover is cached
     if (fs.existsSync(global.library + '/cache/' + sum + '.jpeg')) {
-        callback(global.library + '/cache/' + sum + '.jpeg');
+        callback(global.library + '/cache/' + sum + '.jpeg', epub.metadata);
         return;
     }
 
@@ -24,7 +24,7 @@ function getBookCoverSrc(epub, sum, callback) {
             fs.writeFile(
                 global.library + '/cache/' + sum + '.jpeg',
                 img,
-                function () { callback(global.library + '/cache/' + sum + '.jpeg'); }
+                function () { callback(global.library + '/cache/' + sum + '.jpeg', epub.metadata); }
             );
         });
 
@@ -33,7 +33,7 @@ function getBookCoverSrc(epub, sum, callback) {
 
     // Fallback to using the ISBN and OpenLibrary (@TODO: cache this)
     if (epub.metadata.ISBN) {
-        callback(openLibraryCoversApi + '/isbn/' + epub.metadata.ISBN + '-M.jpg');
+        callback(openLibraryCoversApi + '/isbn/' + epub.metadata.ISBN + '-M.jpg', epub.metadata);
         return;
     }
 
@@ -58,7 +58,7 @@ function getBookCoverSrc(epub, sum, callback) {
                 // Use the first response
                 var coverId = response.docs[0].cover_i;
 
-                callback(openLibraryCoversApi + '/ID/' + coverId + '-M.jpg');
+                callback(openLibraryCoversApi + '/ID/' + coverId + '-M.jpg', epub.metadata);
                 return;
             });
         });
@@ -67,20 +67,33 @@ function getBookCoverSrc(epub, sum, callback) {
     // Use default image
 }
 
-function buildDomBook(coverSrc) {
+function buildDomBook(coverSrc, epubMetadata) {
 
-    var eBookContainer = document.createElement('div');
-    var eBookLink      = document.createElement('a');
-    var eBookOverlay   = document.createElement('div');
-    var eBookCover     = document.createElement('img');
+    var eBookContainer        = document.createElement('div');
+    var eBookLink             = document.createElement('a');
+    var eBookOverlay          = document.createElement('div');
+    var eBookOverlayContainer = document.createElement('span');
+    var eBookTitle            = document.createElement('strong');
+    var eBookAuthor           = document.createElement('strong');
+    var eBookBy               = document.createTextNode('by');
+    var eBookCover            = document.createElement('img');
 
     eBookContainer.setAttribute('class', 'lamp-book');
-
     eBookOverlay.setAttribute('class', 'lamp-book-overlay');
-    eBookOverlay.innerHTML = '<span><strong>Test</strong></span>'
+    eBookAuthor.setAttribute('class', 'lamp-book-author');
+    eBookTitle.setAttribute('class', 'lamp-book-title');
+
+    eBookTitle.innerHTML  = epubMetadata.title;
+    eBookAuthor.innerHTML = epubMetadata.creator;
+
+    eBookOverlayContainer.appendChild(eBookTitle);
+    eBookOverlayContainer.appendChild(eBookBy);
+    eBookOverlayContainer.appendChild(eBookAuthor);
 
     eBookCover.setAttribute('class', 'lamp-book-cover');
     eBookCover.setAttribute('src', coverSrc);
+
+    eBookOverlay.appendChild(eBookOverlayContainer);
 
     eBookLink.appendChild(eBookOverlay);
     eBookLink.appendChild(eBookCover);
