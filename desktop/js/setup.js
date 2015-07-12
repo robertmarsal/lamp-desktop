@@ -1,5 +1,6 @@
 var osenv = require('osenv');
 var fs    = require('fs');
+var books = require('./js/library');
 
 global.library = osenv.home() + '/.lamp';
 
@@ -16,3 +17,6 @@ libraryFolders.forEach(function(folder){
         fs.mkdirSync(global.library + '/' + folder);
     }
 });
+
+// Sync the library
+books.sync();

@@ -1,24 +1,46 @@
-var fs   = require('fs');
-var http = require('http');
-var EPub = require('epub');
+var fs       = require('fs');
+var http     = require('http');
+var checksum = require('checksum');
+var EPub     = require('epub');
 
 var libraryContainer = document.querySelector('#lamp-container');
 
-function getBookCoverSrc(bookMetadata, callback) {
+function getBookCoverSrc(epub, sum, callback) {
 
     var openLibraryCoversApi = 'http://covers.openlibrary.org/b';
     var openLibrarySearchApi = 'http://openlibrary.org/search.json?';
 
-    // First try using the ISBN
-    if (bookMetadata.ISBN) {
-        callback(openLibraryCoversApi + '/isbn/' + bookMetadata.ISBN + '-M.jpg');
+    // Check if the cover is cached
+    if (fs.existsSync(global.library + '/cache/' + sum + '.jpeg')) {
+        callback(global.library + '/cache/' + sum + '.jpeg');
         return;
     }
 
-    // If ISBN fails, search by creator (author) and title
-    if (bookMetadata.creator && bookMetadata.title) {
-        var title   = bookMetadata.title.replace(/ /g, '+');
-        var author  = bookMetadata.creator.replace(/ /g, '+');
+    // First try to use the local cover
+    if (epub.metadata.cover) {
+
+        epub.getImage('cover', function(error, img, mimeType){
+
+            fs.writeFile(
+                global.library + '/cache/' + sum + '.jpeg',
+                img,
+                function () { callback(global.library + '/cache/' + sum + '.jpeg'); }
+            );
+        });
+
+        return;
+    }
+
+    // Fallback to using the ISBN and OpenLibrary (@TODO: cache this)
+    if (epub.metadata.ISBN) {
+        callback(openLibraryCoversApi + '/isbn/' + epub.metadata.ISBN + '-M.jpg');
+        return;
+    }
+
+    // If ISBN fails, search by creator (author) and title (@TODO: cache this)
+    if (epub.metadata.creator && epub.metadata.title) {
+        var title   = epub.metadata.title.replace(/ /g, '+');
+        var author  = epub.metadata.creator.replace(/ /g, '+');
         var request = openLibrarySearchApi + 'title=' + title + '&author=' + author;
 
         http.get(request, function(res){
@@ -67,13 +89,13 @@ function buildDomBook(coverSrc) {
     libraryContainer.appendChild(eBookContainer);
 }
 
-function importBook (file) {
+function importBook (file, sum) {
     console.log('Importing ' + file);
 
     var epub           = new EPub(global.library + '/books/' + file, './',  './');
 
     epub.on('end', function() {
-        getBookCoverSrc(epub.metadata, buildDomBook);
+        getBookCoverSrc(epub, sum, buildDomBook);
     });
 
     epub.parse();
@@ -91,7 +113,12 @@ exports.sync = function () {
             return;
         }
 
-        files.forEach(importBook);
+        files.forEach(function(file){
+            // Obtain a checksum of the file that will identify the book
+            checksum.file(global.library + '/books/' + file, function (err, sum){
+                 importBook(file, sum);
+            });
+        });
     })
 
 
