@@ -2,9 +2,6 @@
   "name": "lamp",
   "version": "0.0.0",
   "main": "js/main.js",
-  "devDependencies": {
-    "electron-prebuilt": "^0.29.2"
-  },
   "dependencies": {
     "checksum": "^0.1.1",
     "epub": "^0.1.6",
