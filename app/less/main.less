@@ -1,6 +1,8 @@
+@import 'variables';
+
 html {
-    background-color: #2b2a27;
-    color: #ede0ce;
+    background-color: @color-background;
+    color: @color-text;
     overflow-y: scroll;
 }
 
@@ -17,11 +19,11 @@ body::before {
 
 ::-webkit-scrollbar {
     width: 12px;
-    background: #56544E;
+    background: @color-scrollbar;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #403F3A;
+    background: @color-scrollbar-thumb;
 }
 
 #lamp-container {
@@ -37,7 +39,7 @@ body::before {
 
 .lamp-book a {
     color: transparent;
-    font-family: 'Kaushan Script', cursive;
+    font-family: @font-family-cursive;
 }
 
 .lamp-book a:hover .lamp-book-overlay {
