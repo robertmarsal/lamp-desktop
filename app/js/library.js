@@ -11,7 +11,7 @@ function getBookCoverSrc(epub, sum, callback) {
     var cachedCover = path.join(global.library, 'cache', sum + '.jpeg');
 
     if (fs.existsSync(cachedCover)) {
-        callback(cachedCover, epub.metadata);
+        callback(cachedCover, epub.metadata, sum);
         return;
     }
 
@@ -23,7 +23,7 @@ function getBookCoverSrc(epub, sum, callback) {
             fs.writeFile(
                 cachedCover,
                 img,
-                function () { callback(cachedCover, epub.metadata); }
+                function () { callback(cachedCover, epub.metadata, sum); }
             );
         });
 
@@ -33,7 +33,7 @@ function getBookCoverSrc(epub, sum, callback) {
     // Use default image @TODO
 }
 
-function buildDomBook(coverSrc, epubMetadata) {
+function buildDomBook(coverSrc, epubMetadata, sum) {
 
     var eBookContainer        = document.createElement('div');
     var eBookLink             = document.createElement('a');
@@ -61,6 +61,8 @@ function buildDomBook(coverSrc, epubMetadata) {
 
     eBookOverlay.appendChild(eBookOverlayContainer);
 
+    eBookLink.setAttribute('class', 'lamb-book-action');
+    eBookLink.setAttribute('book', sum);
     eBookLink.appendChild(eBookOverlay);
     eBookLink.appendChild(eBookCover);
 
