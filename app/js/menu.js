@@ -23,7 +23,7 @@ function addBookToLibrary() {
         var fileName = path.basename(filePath);
 
         var readStream  = fs.createReadStream(filePath[0]);
-        var writeStream = fs.createWriteStream(global.library + '/books/' + fileName);
+        var writeStream = fs.createWriteStream(path.join(global.library, 'books', fileName));
 
         readStream.pipe(writeStream);
 
