@@ -9,7 +9,6 @@ gulp.task('less', function () {
                .pipe(gulp.dest('app/css'));
 });
 
-gulp.task('watch', function() {
-    gulp.run('less');
+gulp.task('watch', ['less'], function() {
     gulp.watch('app/**/*.less', ['less']);
 });
