@@ -2,8 +2,10 @@ var fs       = require('fs');
 var path     = require('path');
 var checksum = require('checksum');
 var EPub     = require('epub');
+var React    = require('react');
+var BookGrid = require('./components/BookGrid');
 
-var libraryContainer = document.querySelector('#lamp-container');
+var books = [];
 
 function getBookCoverSrc(epub, sum, callback) {
 
@@ -33,60 +35,32 @@ function getBookCoverSrc(epub, sum, callback) {
     // Use default image @TODO
 }
 
-function buildDomBook(coverSrc, epubMetadata, sum) {
+function renderBook(coverSrc, epubMetadata, sum) {
 
-    var eBookContainer        = document.createElement('div');
-    var eBookLink             = document.createElement('a');
-    var eBookOverlay          = document.createElement('div');
-    var eBookOverlayContainer = document.createElement('span');
-    var eBookTitle            = document.createElement('strong');
-    var eBookAuthor           = document.createElement('strong');
-    var eBookBy               = document.createTextNode('by');
-    var eBookCover            = document.createElement('img');
+    books.push({
+        title: epubMetadata.title,
+        author: epubMetadata.creator,
+        cover: coverSrc,
+        key: sum
+    });
 
-    eBookContainer.setAttribute('class', 'lamp-book');
-    eBookOverlay.setAttribute('class', 'lamp-book-overlay');
-    eBookAuthor.setAttribute('class', 'lamp-book-author');
-    eBookTitle.setAttribute('class', 'lamp-book-title');
-
-    eBookTitle.innerHTML  = epubMetadata.title;
-    eBookAuthor.innerHTML = epubMetadata.creator;
-
-    eBookOverlayContainer.appendChild(eBookTitle);
-    eBookOverlayContainer.appendChild(eBookBy);
-    eBookOverlayContainer.appendChild(eBookAuthor);
-
-    eBookCover.setAttribute('class', 'lamp-book-cover');
-    eBookCover.setAttribute('src', coverSrc);
-
-    eBookOverlay.appendChild(eBookOverlayContainer);
-
-    eBookLink.setAttribute('class', 'lamb-book-action');
-    eBookLink.setAttribute('book', sum);
-    eBookLink.appendChild(eBookOverlay);
-    eBookLink.appendChild(eBookCover);
-
-    eBookContainer.appendChild(eBookLink);
-    libraryContainer.appendChild(eBookContainer);
+    React.render(
+        React.createElement(BookGrid, {books: books}),
+        document.body
+    );
 }
 
 function importBook (file, sum) {
-    console.log('Importing ' + file);
-
     var epub = new EPub(path.join(global.library, 'books', file), './',  './');
 
     epub.on('end', function() {
-        getBookCoverSrc(epub, sum, buildDomBook);
+        getBookCoverSrc(epub, sum, renderBook);
     });
 
     epub.parse();
 }
 
 exports.sync = function () {
-    console.log('Synchronizing library...');
-
-    // Clear the current library
-    libraryContainer.innerHTML = '';
 
     // Get all books in the library folder
     fs.readdir(path.join(global.library, 'books'), function(err, files) {
@@ -96,8 +70,8 @@ exports.sync = function () {
 
         files.forEach(function(file){
             // Obtain a checksum of the file that will identify the book
-            checksum.file(path.join(global.library, 'books', file), function (err, sum){
-                 importBook(file, sum);
+            checksum.file(path.join(global.library, 'books', file), function (err, sum) {
+                importBook(file, sum);
             });
         });
     })

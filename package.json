@@ -2,6 +2,9 @@
   "devDependencies": {
     "electron-prebuilt": "^0.29.2",
     "gulp": "^3.9.0",
-    "gulp-less": "^3.0.3"
+    "gulp-ext-replace": "^0.2.0",
+    "gulp-less": "^3.0.3",
+    "gulp-react": "^3.0.1",
+    "react-tools": "^0.13.3"
   }
 }
