@@ -1,10 +1,13 @@
-var React = require('react');
+var React       = require('react');
 
 var Book = React.createClass({
+    openBook: function() {
+        this.props.openBook();
+    },
     render: function() {
         return (
             <div className="lamp-book">
-                <a className="lamb-book-action">
+                <a className="lamb-book-action" onClick={this.openBook}>
                     <div className="lamp-book-overlay">
                         <span>
                             <strong className="lamp-book-title">

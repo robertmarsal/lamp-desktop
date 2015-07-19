@@ -1,9 +1,9 @@
-var fs       = require('fs');
-var path     = require('path');
-var checksum = require('checksum');
-var EPub     = require('epub');
-var React    = require('react');
-var BookGrid = require('./components/BookGrid');
+var fs          = require('fs');
+var path        = require('path');
+var checksum    = require('checksum');
+var EPub        = require('epub');
+var React       = require('react');
+var BookLibrary = require('./components/BookLibrary');
 
 var books = [];
 
@@ -45,7 +45,7 @@ function renderBook(coverSrc, epubMetadata, sum) {
     });
 
     React.render(
-        React.createElement(BookGrid, {books: books}),
+        React.createElement(BookLibrary, {books: books}),
         document.body
     );
 }
