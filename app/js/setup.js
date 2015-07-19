@@ -23,17 +23,3 @@ libraryFolders.forEach(function(folder){
 
 // Sync the library
 books.sync();
-/*
-var React    = require('react');
-var BookGrid = require('./js/components/BookGrid.js');
-
-var data = [
-  {author: "Pete Hunt", title: "This is one title", key: "1"},
-  {author: "Jordan Walke", title: "This is another title", key: "2"}
-];
-
-React.render(
-  React.createElement(BookGrid, {books: data}),
-  document.body
-);
-*/

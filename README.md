@@ -1,3 +1,3 @@
 #Lamp
 
-![Lamp Desktop](desktop/assets/screenshot.jpg)
+![Lamp Desktop](app/assets/screenshot.jpg)
